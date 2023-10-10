@@ -31,8 +31,12 @@ pipeline {
         stage('Publish to Nexus') {
     steps {
         script {
-            def artifactPath = sh(script: 'find target/spring-boot-web.jar | head -n 1', returnStatus: true)
             def pomPath = 'pom.xml'
+            def artifactPath = filesByGlob[0].path
+            def artifactExists = fileExists artifactPath
+            def pom = readMavenPom file: "pom.xml"
+            def filesByGlob = findFiles(glob: "target/*.${pom.packaging}")
+            echo "${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
 
             // Check if the artifact and POM file exist
             if (fileExists(artifactPath) && fileExists(pomPath)) {
