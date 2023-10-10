@@ -28,42 +28,42 @@ pipeline {
                 }
             }
         }
-        stage("Publish to Nexus Repository Manager") {
+        stage('Publish to Nexus') {
             steps {
                 script {
-                    def pom = readMavenPom file: 'pom.xml';
-                    def pomContent = readFile('pom.xml');
-                    filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
-                    echo "${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
-                    artifactPath = filesByGlob[0].path;
-                    artifactExists = fileExists artifactPath;
-                    if(artifactExists) {
-                        echo "*** File: ${artifactPath}, group: ${pom.groupId}, packaging: ${pom.packaging}, version ${pom.version}";
+                    def artifactPath = "target/*.jar" // Replace with the path to your artifact
+                    def pomPath = "pom.xml" // Path to your POM file
+
+                    // Check if the artifact and POM file exist
+                    if (fileExists(artifactPath) && fileExists(pomPath)) {
                         nexusArtifactUploader(
                             nexusVersion: NEXUS_VERSION,
                             protocol: NEXUS_PROTOCOL,
                             nexusUrl: NEXUS_URL,
-                            groupId: 'pom.com.mkyong',
-                            version: 'pom.1.0',
+                            groupId: 'pom.com.mkyong', // Customize your artifact coordinates
+                            version: 'pom.1.0', // Customize your artifact version
                             repository: NEXUS_REPOSITORY,
                             credentialsId: NEXUS_CREDENTIAL_ID,
                             artifacts: [
-                                [artifactId: 'pom.docker-spring-boot',
-                                classifier: '',
-                                file: artifactPath,
-                                type: pom.packaging],
-                                [artifactId: 'pom.docker-spring-boot',
-                                classifier: '',
-                                file: "pom.xml",
-                                type: "pom"]
+                                [
+                                    artifactId: 'pom.docker-spring-boot',
+                                    classifier: '',
+                                    file: artifactPath,
+                                    type: 'jar'
+                                ],
+                                [
+                                    artifactId: 'pom.docker-spring-boot',
+                                    classifier: '',
+                                    file: pomPath,
+                                    type: 'pom'
+                                ]
                             ]
-                        );
+                        )
                     } else {
-                        error "*** File: ${artifactPath}, could not be found";
+                        error 'Artifact or POM file not found'
                     }
                 }
             }
         }
     }
 }
-
