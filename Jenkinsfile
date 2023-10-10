@@ -31,6 +31,7 @@ pipeline {
         
      stage("Publish to Nexus Repository Manager") {
         steps {
+            script{
             def mavenPom = readMavenPom 'pom.xml'
             nexusArtifactUploader artifacts: [
                 [
@@ -47,6 +48,8 @@ pipeline {
             protocol: NEXUS_PROTOCOL, 
             repository: NEXUS_REPOSITORY, 
             version: "${mavenPom.version}"
+            }
+            
         }
      }
     }
