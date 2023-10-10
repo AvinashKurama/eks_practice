@@ -1,9 +1,15 @@
-import hudson.FilePath
-
 pipeline {
     agent any
     tools {
         maven "mvn"
+    }
+
+    environment {
+        NEXUS_VERSION = "nexus3"
+        NEXUS_PROTOCOL = "http"
+        NEXUS_URL = "54.173.247.114:8081"
+        NEXUS_REPOSITORY = "maven-central-repo"
+        NEXUS_CREDENTIAL_ID = "NEXUS_REPO"
     }
 
     stages {
@@ -20,14 +26,6 @@ pipeline {
                     sh "${mavenHome}/bin/mvn -s ${mavenSettings} -Dmaven.test.failure.ignore=true clean package"
                 }
             }
-        }
-
-        environment {
-            NEXUS_VERSION = "nexus3"
-            NEXUS_PROTOCOL = "http"
-            NEXUS_URL = "54.173.247.114:8081"
-            NEXUS_REPOSITORY = "maven-central-repo"
-            NEXUS_CREDENTIAL_ID = "NEXUS_REPO"
         }
 
         stage("Publish to Nexus Repository Manager") {
