@@ -44,7 +44,7 @@ pipeline {
             nexusUrl: NEXUS_URL, 
             nexusVersion: NEXUS_VERSION, 
             protocol: NEXUS_PROTOCOL, 
-            repository: 'http://54.173.247.114:8081/repository/maven-central-repo/', 
+            repository: NEXUS_REPOSITORY, 
             version: '1.0'
         }
      }
