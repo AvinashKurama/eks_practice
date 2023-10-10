@@ -31,7 +31,7 @@ pipeline {
         stage('Publish to Nexus') {
     steps {
         script {
-            def artifactPath = sh(script: 'find target/ -name "*.jar" | head -n 1', returnStatus: true).trim()
+            def artifactPath = sh(script: 'find target/ -name "*.jar" | head -n 1', returnStatus: true)
             def pomPath = 'pom.xml'
 
             // Check if the artifact and POM file exist
