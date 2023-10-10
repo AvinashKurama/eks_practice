@@ -3,7 +3,7 @@ import hudson.FilePath
 pipeline {
     agent any
     tools {
-        maven "MAVEN"
+        maven "MVN"
     }
 
     stages {
