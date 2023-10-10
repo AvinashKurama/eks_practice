@@ -35,7 +35,7 @@ pipeline {
                 [
                     artifactId: 'docker-spring-boot', 
                     classifier: '', 
-                    file: 'target/spring-boot-web.jar', 
+                    file: 'target/docker-spring-boot-1.0.jar', 
                     type: 'jar'
                     ]
                 ], 
