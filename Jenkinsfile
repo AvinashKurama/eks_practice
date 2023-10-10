@@ -29,42 +29,41 @@ pipeline {
             }
         }
         stage('Publish to Nexus') {
-            steps {
-                script {
-                    def artifactPath = "target/*.jar" // Replace with the path to your artifact
-                    def pomPath = "pom.xml" // Path to your POM file
-                    def filesByGlob = findFiles(glob: "target/*.${pom.packaging}")
+    steps {
+        script {
+            def artifactPath = sh(script: 'find target/ -name "*.jar" | head -n 1', returnStatus: true).trim()
+            def pomPath = 'pom.xml'
 
-                    // Check if the artifact and POM file exist
-                    if (fileExists(artifactPath) && fileExists(pomPath)) {
-                        nexusArtifactUploader(
-                            nexusVersion: NEXUS_VERSION,
-                            protocol: NEXUS_PROTOCOL,
-                            nexusUrl: NEXUS_URL,
-                            groupId: 'pom.com.mkyong', // Customize your artifact coordinates
-                            version: 'pom.1.0', // Customize your artifact version
-                            repository: NEXUS_REPOSITORY,
-                            credentialsId: NEXUS_CREDENTIAL_ID,
-                            artifacts: [
-                                [
-                                    artifactId: 'pom.docker-spring-boot',
-                                    classifier: '',
-                                    file: artifactPath,
-                                    type: 'jar'
-                                ],
-                                [
-                                    artifactId: 'pom.docker-spring-boot',
-                                    classifier: '',
-                                    file: pomPath,
-                                    type: 'pom'
-                                ]
-                            ]
-                        )
-                    } else {
-                        error 'Artifact or POM file not found'
-                    }
-                }
+            // Check if the artifact and POM file exist
+            if (fileExists(artifactPath) && fileExists(pomPath)) {
+                nexusArtifactUploader(
+                    nexusVersion: NEXUS_VERSION,
+                    protocol: NEXUS_PROTOCOL,
+                    nexusUrl: NEXUS_URL,
+                    groupId: 'com.mkyong', // Customize your artifact coordinates
+                    version: '1.0', // Customize your artifact version
+                    repository: NEXUS_REPOSITORY,
+                    credentialsId: NEXUS_CREDENTIAL_ID,
+                    artifacts: [
+                        [
+                            artifactId: 'docker-spring-boot', // Replace with your artifactId
+                            classifier: '',
+                            file: artifactPath,
+                            type: 'jar'
+                        ],
+                        [
+                            artifactId: 'docker-spring-boot', // Replace with your artifactId
+                            classifier: '',
+                            file: pomPath,
+                            type: 'pom'
+                        ]
+                    ]
+                )
+            } else {
+                error 'Artifact or POM file not found'
             }
         }
     }
+}
+     }
 }
