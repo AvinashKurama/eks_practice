@@ -31,42 +31,22 @@ pipeline {
         
      stage("Publish to Nexus Repository Manager") {
         steps {
-            script {
-                pom = readMavenPom file: "pom.xml";
-                filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
-                echo "${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
-                artifactPath = filesByGlob[0].path;
-                artifactExists = fileExists artifactPath;
-                if(artifactExists) {
-                echo "*** File: ${artifactPath}, group: ${pom.groupId}, packaging: ${pom.packaging}, version ${pom.version}";
-                nexusArtifactUploader(
-                    nexusVersion: NEXUS_VERSION,
-                    protocol: NEXUS_PROTOCOL,
-                    nexusUrl: NEXUS_URL,
-                    groupId: 'com.mkyong', // Customize your artifact coordinates
-                    version: '1.0', // Customize your artifact version
-                    repository: NEXUS_REPOSITORY,
-                    credentialsId: NEXUS_CREDENTIAL_ID,
-                    artifacts: [
-                        [
-                            artifactId: 'docker-spring-boot', // Replace with your artifactId
-                            classifier: '',
-                            file: artifactPath,
-                            type: 'jar'
-                        ],
-                        [
-                            artifactId: 'docker-spring-boot', // Replace with your artifactId
-                            classifier: '',
-                            file: pomPath,
-                            type: 'pom'
-                        ]
+            nexusArtifactUploader artifacts: [
+                [
+                    artifactId: 'docker-spring-boot', 
+                    classifier: '', 
+                    file: 'target/spring-boot-web.jar', 
+                    type: 'jar'
                     ]
-                )
-            } else {
-                error 'Artifact or POM file not found'
-            }
+                ], 
+            credentialsId: NEXUS_CREDENTIAL_ID,
+            groupId: 'com.mkyong', 
+            nexusUrl: NEXUS_URL, 
+            nexusVersion: NEXUS_VERSION, 
+            protocol: NEXUS_PROTOCOL, 
+            repository: 'http://54.173.247.114:8081/repository/maven-central-repo/', 
+            version: '1.0'
         }
-    }
-}
      }
+    }
 }
