@@ -37,7 +37,7 @@ pipeline {
                 [
                     artifactId: 'docker-spring-boot', 
                     classifier: '', 
-                    file: "target/docker-spring-boot-${mavenPom.version}.jar", 
+                    file: "target/spring-boot-web.jar", 
                     type: 'jar'
                     ]
                 ], 

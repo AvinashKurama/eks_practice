@@ -1,0 +1,35 @@
+Plugins - nexusArtifatuploadere
+          pipeline Utility 
+
+   For creating Repo in Nexus : choose maven2(hosted)
+                                   Create User (jenkins) --> Choose nx-admin
+      + mention credentionals in credential =store in jenkins for proper access
+
+
+Pipeline Syntax -- Snippet Generator --nexusArtifatuploadere
+end of filling everything also try to fill artifat details 
+
+
+Keywords: Tools
+          environment 
+             {NEXUS_VERSION = "nexus3"}
+          stages {
+        stage("Clone code from GitHub") {
+            steps {
+                script {
+                    git branch: 'main', url: 'https://github.com/AvinashKurama/eks_practice.git';
+                }
+            }
+        }
+        stage("Maven Build") {
+            steps {
+                script {
+                    sh "mvn package -DskipTests=true"
+                }
+            }
+        }
+      
+
+
+Note: the jenkinsfile in this folder is dynamic code please prefer this or else 
+      try the other one out of this folder
