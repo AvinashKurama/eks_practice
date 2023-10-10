@@ -31,11 +31,12 @@ pipeline {
         
      stage("Publish to Nexus Repository Manager") {
         steps {
+            def mavenPom = readMavenPom 'pom.xml'
             nexusArtifactUploader artifacts: [
                 [
                     artifactId: 'docker-spring-boot', 
                     classifier: '', 
-                    file: 'target/docker-spring-boot-1.0.jar', 
+                    file: "target/docker-spring-boot-${mavenPom.version}.jar", 
                     type: 'jar'
                     ]
                 ], 
@@ -45,7 +46,7 @@ pipeline {
             nexusVersion: NEXUS_VERSION, 
             protocol: NEXUS_PROTOCOL, 
             repository: NEXUS_REPOSITORY, 
-            version: '1.0'
+            version: "${mavenPom.version}"
         }
      }
     }
