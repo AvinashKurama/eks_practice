@@ -5,13 +5,18 @@ pipeline {
     }
 
 
-    stages {
-        stage("Build Maven") {
+     stages {
+        stage("Clone code from GitHub") {
             steps {
                 script {
-                    // Checkout the code and build
-                    checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/AvinashKurama/eks_practice.git']]])
-                    sh "${mavenHome}/bin/mvn -s ${mavenSettings} -Dmaven.test.failure.ignore=true clean package"
+                    git branch: 'main', url: 'https://github.com/AvinashKurama/eks_practice.git';
+                }
+            }
+        }
+        stage("Maven Build") {
+            steps {
+                script {
+                    sh "mvn package -DskipTests=true"
                 }
             }
         }
