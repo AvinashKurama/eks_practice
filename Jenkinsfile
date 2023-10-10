@@ -31,11 +31,9 @@ pipeline {
         stage('Publish to Nexus') {
             steps {
                 script {
-                    pom = readMavenPom file: "pom.xml";
-                    filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
-                    echo "${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
-                    artifactPath = filesByGlob[0].path;
-                    artifactExists = fileExists artifactPath;
+                    def artifactPath = "target/*.jar" // Replace with the path to your artifact
+                    def pomPath = "pom.xml" // Path to your POM file
+                    def filesByGlob = findFiles(glob: "target/*.${pom.packaging}")
 
                     // Check if the artifact and POM file exist
                     if (fileExists(artifactPath) && fileExists(pomPath)) {
