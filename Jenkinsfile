@@ -16,11 +16,6 @@ pipeline {
         stage("Build Maven") {
             steps {
                 script {
-                    // Set up Maven tool
-                    def mvnHome = tool name: 'MAVEN', type: 'hudson.tasks.Maven$MavenInstallation'
-                    def mavenHome = tool name: 'MAVEN', type: 'hudson.tasks.Maven$MavenInstallation'
-                    def mavenSettings = new FilePath(mvnHome).child('conf/settings.xml')
-                    
                     // Checkout the code and build
                     checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'GIT_REPO', url: 'https://github.com/AvinashKurama/eks_practice.git']]])
                     sh "${mavenHome}/bin/mvn -s ${mavenSettings} -Dmaven.test.failure.ignore=true clean package"
