@@ -3,6 +3,14 @@ pipeline {
     tools {
         maven "MAVEN"
     }
+
+            stage("Maven Build") {
+            steps {
+                checkout([$class: 'gitSCM', branches: [[name: '*/main']], extensions:[], userRemoteConfigs: [[credentialsId: 'GIT_REPO', url: 'https://github.com/AvinashKurama/eks_practice.git']]])
+                sh "mvn -Dmaven.test.failure.ignore=true clean package"
+            }
+        }
+        
     environment {
         NEXUS_VERSION = "nexus3"
         NEXUS_PROTOCOL = "http"
@@ -11,12 +19,7 @@ pipeline {
         NEXUS_CREDENTIAL_ID = "NEXUS_REPO"
     }
 
-        stage("Maven Build") {
-            steps {
-                checkout([$class: 'gitSCM', branches: [[name: '*/main']], extensions:[], userRemoteConfigs: [[credentialsId: 'GIT_REPO', url: 'https://github.com/AvinashKurama/eks_practice.git']]])
-                sh "mvn -Dmaven.test.failure.ignore=true clean package"
-            }
-        }
+
         stage("Publish to Nexus Repository Manager") {
             steps {
                 script {
